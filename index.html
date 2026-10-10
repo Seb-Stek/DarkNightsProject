@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dark Nights Project</title>
+  <meta name="description" content="A nonprofit that organizes monthly, neighbourhood-wide switch-offs of unnecessary outdoor light, timed to the new moon.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="nav">
+    <a href="#home" class="brand">Dark Nights Project</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">Menu</button>
+    <nav class="nav-links">
+      <a href="#scale">Light pollution scale</a>
+      <a href="#locations">Locations</a>
+      <a href="#what-we-do">What we do</a>
+      <a href="#who-we-are">Who we are</a>
+      <a href="#why-help">Why help</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <div class="page" id="home" data-title="Home">
+      <section class="hero">
+        <canvas id="sky" aria-hidden="true"></canvas>
+        <div class="hero-inner">
+          <h1>Most of us have never seen the Milky&nbsp;Way from home.</h1>
+          <div class="hero-foot">
+            <p class="lede">Dark Nights is a nonprofit that organizes a monthly switch-off of unnecessary outdoor light, neighbourhood by neighbourhood, on the Saturday nearest the new moon. Then everyone goes outside and looks up.</p>
+            <div class="next">
+              <span class="label">Next Dark Night</span>
+              <span class="next-date" id="next-date">&nbsp;</span>
+              <span class="next-in" id="next-in" aria-live="polite">&nbsp;</span>
+              <a href="#locations" class="btn">Find one near you</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nav class="overview" aria-label="Sections">
+        <a href="#scale">
+          <span class="ov-num">01</span>
+          <span class="ov-title">Light pollution scale</span>
+          <span class="ov-desc">See how many stars disappear as a sky goes from desert-dark to city-bright.</span>
+        </a>
+        <a href="#locations">
+          <span class="ov-num">02</span>
+          <span class="ov-title">Locations</span>
+          <span class="ov-desc">Find the Dark Night closest to you, or put your own town on the map.</span>
+        </a>
+        <a href="#what-we-do">
+          <span class="ov-num">03</span>
+          <span class="ov-title">What we do</span>
+          <span class="ov-desc">How a Dark Night runs, and the programs that keep skies dark between them.</span>
+        </a>
+        <a href="#who-we-are">
+          <span class="ov-num">04</span>
+          <span class="ov-title">Who we are</span>
+          <span class="ov-desc">A nonprofit of hosts, volunteer astronomers and neighbours.</span>
+        </a>
+        <a href="#why-help">
+          <span class="ov-num">05</span>
+          <span class="ov-title">Why you should help</span>
+          <span class="ov-desc">What light pollution costs us, and what you can change tonight.</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- LIGHT POLLUTION SCALE -->
+    <div class="page" id="scale" data-title="Light pollution scale" hidden>
+      <header class="page-head">
+        <span class="label">01</span>
+        <h1 class="page-title">The light pollution scale</h1>
+        <p class="lede">Astronomers rate sky darkness on the Bortle scale, from 1 (a remote desert) to 9 (a city centre). Most people live at 7 or above.</p>
+      </header>
+
+      <section id="simulator" class="section">
+        <h2 class="section-label">The sky you're missing</h2>
+        <div class="section-body">
+          <p class="intro">Drag the slider to see what each level of the scale looks like overhead.</p>
+          <figure class="sim">
+            <div class="sim-view">
+              <canvas id="sim-canvas"></canvas>
+              <div class="sim-skyline" aria-hidden="true"></div>
+            </div>
+            <figcaption class="sim-controls">
+              <div class="sim-row">
+                <span><span id="sim-class">Bortle 8</span> &middot; <span id="sim-name">City sky</span></span>
+                <span>About <strong id="sim-count">100</strong> stars visible</span>
+              </div>
+              <input type="range" id="bortle" min="1" max="9" value="8" step="1" aria-label="Bortle class">
+              <div class="sim-scale"><span>1 &middot; Dark site</span><span>9 &middot; City centre</span></div>
+              <p id="sim-desc" class="sim-desc"></p>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="bortle-levels" class="section">
+        <h2 class="section-label">All nine levels</h2>
+        <div class="section-body">
+          <ol class="levels" id="levels"></ol>
+        </div>
+      </section>
+    </div>
+
+    <!-- LOCATIONS -->
+    <div class="page" id="locations" data-title="Locations" hidden>
+      <header class="page-head">
+        <span class="label">02</span>
+        <h1 class="page-title">Locations</h1>
+        <p class="lede">Dark Nights happen in parks, fields and rooftops in towns around the world. All start at 9 pm local time.</p>
+      </header>
+
+      <section id="events" class="section">
+        <h2 class="section-label">Upcoming Dark Nights</h2>
+        <div class="section-body">
+          <p class="intro">RSVP so the host knows how many people to expect.</p>
+          <form class="near" id="near-form" role="search">
+            <label for="near-input">Your town</label>
+            <div class="near-row">
+              <input type="search" id="near-input" placeholder="Boulder, CO" autocomplete="address-level2">
+              <button class="btn" type="submit">Find closest</button>
+            </div>
+            <div class="near-meta">
+              <button type="button" class="link-btn" id="near-locate">Use my location</button>
+              <button type="button" class="link-btn" id="near-clear" hidden>Show all by date</button>
+            </div>
+            <p class="near-status" id="near-status" role="status"></p>
+          </form>
+          <ul class="events" id="events-list"></ul>
+          <p class="empty" id="events-empty" hidden>No Dark Nights listed yet. <a href="#host">Host the first one.</a></p>
+        </div>
+      </section>
+
+      <section id="host" class="section">
+        <h2 class="section-label">Host a Dark Night</h2>
+        <div class="section-body host">
+          <div>
+            <p class="intro">Don't see your town? You don't need a telescope or any astronomy knowledge, only a place people can gather and some curious neighbours.</p>
+            <p>We'll post you a host kit: flyers, twenty red torches, printed star charts for the season, and a one-page script for asking shops and the council to join in. We'll also try to pair you with an astronomy club nearby.</p>
+          </div>
+          <form id="host-form" class="host-form">
+            <label>Your name<input name="name" required autocomplete="name"></label>
+            <label>Town or city<input name="city" required placeholder="Boulder, CO"></label>
+            <label>Where people will meet<input name="place" required placeholder="North lawn, Central Park"></label>
+            <label>Date
+              <select name="date" id="host-date"></select>
+            </label>
+            <button class="btn" type="submit">Register</button>
+            <p class="form-note" id="host-note" role="status"></p>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <!-- WHAT WE DO -->
+    <div class="page" id="what-we-do" data-title="What we do" hidden>
+      <header class="page-head">
+        <span class="label">03</span>
+        <h1 class="page-title">What we do</h1>
+        <p class="lede">Once a month, whole neighbourhoods switch off at the same time and go outside together. In between, we work on making the dark stick.</p>
+      </header>
+
+      <section id="how" class="section">
+        <h2 class="section-label">How a Dark Night works</h2>
+        <div class="section-body">
+          <ol class="steps">
+            <li>
+              <h3>Someone signs up their area</h3>
+              <p>A local host registers the night, then talks to neighbours, shop owners, the school and the council.</p>
+            </li>
+            <li>
+              <h3>Lights go down at 9 pm</h3>
+              <p>Porch lights, shop signs, floodlights and empty-office lights go off. Safety lighting stays on.</p>
+            </li>
+            <li>
+              <h3>Everyone meets outside</h3>
+              <p>A park, a field, a flat roof. Bring a blanket. Local amateur astronomers bring telescopes and point things out.</p>
+            </li>
+            <li>
+              <h3>We count the stars</h3>
+              <p>Each person counts the stars inside one constellation. Comparing counts from before and during shows exactly what the switch-off did.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="programs" class="section">
+        <h2 class="section-label">Our programs</h2>
+        <div class="section-body">
+          <dl class="programs">
+            <div><dt>Red light kits</dt><dd>Every Dark Night hands out red-filtered torches. Red light lets people walk around safely without wrecking their night vision.</dd></div>
+            <div><dt>Business partners</dt><dd>Shops that switch their signs off after closing get a window sticker and a listing on our map.</dd></div>
+            <div><dt>Fixture swaps</dt><dd>We pay for and fit shielded, warm-coloured outdoor lights on homes and community buildings that ask.</dd></div>
+            <div><dt>Schools</dt><dd>A four-week class where kids make their own star charts, then lead their families around the sky on the next Dark Night.</dd></div>
+            <div><dt>Sky quality map</dt><dd>Every star count goes into a public map, so a town can see whether its sky is getting darker or brighter.</dd></div>
+            <div><dt>Council toolkit</dt><dd>Template letters and a sample lighting ordinance for residents who want their streetlights changed.</dd></div>
+          </dl>
+        </div>
+      </section>
+    </div>
+
+    <!-- WHO WE ARE -->
+    <div class="page" id="who-we-are" data-title="Who we are" hidden>
+      <header class="page-head">
+        <span class="label">04</span>
+        <h1 class="page-title">Who we are</h1>
+        <p class="lede">A nonprofit run mostly by volunteers: hosts, amateur astronomers and neighbours who think everyone should be able to see the stars from their own street.</p>
+      </header>
+
+      <section id="story" class="section">
+        <h2 class="section-label">How it started</h2>
+        <div class="section-body">
+          <p class="intro">It began with one street agreeing to switch its lights off for an evening.</p>
+          <div class="prose">
+            <p>A few neighbours turned off their porch lights, asked the corner shop to dim its sign, and dragged deck chairs into the road. Someone brought a telescope. Kids who had never seen Saturn's rings queued up to look.</p>
+            <p>The next month the street next door joined in. Then a school, then a whole town. Dark Nights grew from that idea: light pollution is easy to fix, and the fastest way to convince people is to show them what they've been missing.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="people" class="section">
+        <h2 class="section-label">Who's involved</h2>
+        <div class="section-body">
+          <dl class="programs">
+            <div><dt>Hosts</dt><dd>Local volunteers who pick a spot, knock on doors and run the night. Most have no astronomy background at all.</dd></div>
+            <div><dt>Volunteer astronomers</dt><dd>Members of amateur astronomy clubs who bring telescopes and help people find their way around the sky.</dd></div>
+            <div><dt>Partners</dt><dd>Shops, schools, libraries and councils that switch off, lend space or change their lighting for good.</dd></div>
+            <div><dt>A small core team</dt><dd>Posts out host kits, keeps the sky quality map running and helps councils with lighting policy.</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section id="values" class="section">
+        <h2 class="section-label">What we believe</h2>
+        <div class="section-body">
+          <div class="effects">
+            <div>
+              <h3>Light where it's needed</h3>
+              <p>We're not against light. We're against light that points at the sky, spills into bedrooms and burns all night for nobody.</p>
+            </div>
+            <div>
+              <h3>Local first</h3>
+              <p>Change sticks when neighbours ask neighbours. Every Dark Night is organized by someone who lives there.</p>
+            </div>
+            <div>
+              <h3>Measure it</h3>
+              <p>Star counts turn "it feels darker" into numbers a council can act on.</p>
+            </div>
+            <div>
+              <h3>Free to join</h3>
+              <p>Dark Nights cost nothing to attend. Host kits are free. Donations cover the rest.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- WHY HELP -->
+    <div class="page" id="why-help" data-title="Why you should help" hidden>
+      <header class="page-head">
+        <span class="label">05</span>
+        <h1 class="page-title">Why you should help</h1>
+        <p class="lede">Light pollution is outdoor light that goes where it isn't needed: up into the sky, across into bedrooms, out over water. It is the only kind of pollution you can stop with a switch.</p>
+      </header>
+
+      <section id="problem" class="section">
+        <h2 class="section-label">The problem</h2>
+        <div class="section-body">
+          <dl class="figures">
+            <div>
+              <dt>80%</dt>
+              <dd>of the world's population lives under a light-polluted sky.<cite>Falchi et al., Science Advances, 2016</cite></dd>
+            </div>
+            <div>
+              <dt>1 in 3</dt>
+              <dd>people can no longer see the Milky Way. In North America it is closer to 4 in 5.<cite>Falchi et al., 2016</cite></dd>
+            </div>
+            <div>
+              <dt>~10%</dt>
+              <dd>is how much brighter the night sky gets each year, judging by what volunteers can still see.<cite>Kyba et al., Science, 2023</cite></dd>
+            </div>
+            <div>
+              <dt>~30%</dt>
+              <dd>of outdoor lighting in the U.S. is wasted, mostly by fixtures that throw light upward.<cite>DarkSky International</cite></dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section id="harms" class="section">
+        <h2 class="section-label">What it harms</h2>
+        <div class="section-body">
+          <div class="effects">
+            <div>
+              <h3>Wildlife</h3>
+              <p>Sea turtle hatchlings head for streetlights instead of the sea. Migrating birds circle lit towers until they're exhausted or hit the glass.</p>
+            </div>
+            <div>
+              <h3>Sleep</h3>
+              <p>Light at night suppresses melatonin. Streetlight through a bedroom window is enough to shift a body clock.</p>
+            </div>
+            <div>
+              <h3>Energy</h3>
+              <p>A light pointed at the sky is electricity spent on nothing. Shielding and timers cut it without making streets darker.</p>
+            </div>
+            <div>
+              <h3>The sky itself</h3>
+              <p>People used the stars to navigate, keep calendars and tell stories for as long as there have been people. Most children now grow up without them.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pledge" class="section">
+        <h2 class="section-label">Take the pledge</h2>
+        <div class="section-body">
+          <p class="intro">You don't have to wait for a Dark Night. Pick what you'll change at home.</p>
+          <div class="pledge">
+            <form id="pledge-form" class="pledge-list">
+              <label><input type="checkbox" value="porch"><span>Turn porch and garden lights off when nobody's using them</span></label>
+              <label><input type="checkbox" value="motion"><span>Put outdoor lights on a motion sensor or timer</span></label>
+              <label><input type="checkbox" value="shield"><span>Use fixtures that point light down, not out</span></label>
+              <label><input type="checkbox" value="warm"><span>Switch outdoor bulbs to warm white, 3000K or lower</span></label>
+              <label><input type="checkbox" value="curtains"><span>Close curtains at night so indoor light stays in</span></label>
+              <label><input type="checkbox" value="ask"><span>Ask one local business to turn its sign off after hours</span></label>
+              <label><input type="checkbox" value="attend"><span>Go to, or host, a Dark Night</span></label>
+            </form>
+            <aside class="pledge-meter">
+              <div class="meter-sky" id="meter-sky"></div>
+              <p class="meter-count"><span id="meter-pct">0</span> of 7</p>
+              <p id="meter-msg" class="meter-msg"></p>
+              <p class="pledge-total"><span id="pledge-total">0</span> people have signed the pledge</p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="donate" class="section">
+        <h2 class="section-label">Donate</h2>
+        <div class="section-body">
+          <p class="intro">Everything we do runs on donations.</p>
+          <ul class="tiers">
+            <li><span class="amt">$10</span><span>Red torches for five people</span></li>
+            <li><span class="amt">$50</span><span>One complete host kit</span></li>
+            <li><span class="amt">$250</span><span>Shielded lighting for a community building</span></li>
+          </ul>
+          <button type="button" class="btn" id="donate-btn">Donate</button>
+          <p class="form-note" id="donate-note" role="status"></p>
+        </div>
+      </section>
+    </div>
+
+    <nav class="pager" id="pager" aria-label="Previous and next section"></nav>
+  </main>
+
+  <footer class="footer">
+    <span>Dark Nights Project</span>
+    <span class="muted">Concept site. Events, counts and donations are simulated.</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
